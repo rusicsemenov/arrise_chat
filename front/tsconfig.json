@@ -6,12 +6,13 @@
         "strict": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
         "noEmit": true,
-        "noImplicitAny": true
+        "noImplicitAny": true,
+        "allowImportingTsExtensions": true
     },
-    "include": ["src"],
     "exclude": ["node_modules"]
 }
