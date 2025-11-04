@@ -1,0 +1,23 @@
+{
+    "name": "arrise-server",
+    "type": "commonjs",
+    "scripts": {
+        "dev": "ts-node-dev --respawn src/index.ts",
+        "build": "tsc -p tsconfig.json",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "cors": "^2",
+        "express": "^4",
+        "ws": "^8"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "2.3.3",
+        "@types/cors": "^2.8.19",
+        "@types/express": "^4",
+        "@types/node": "^20",
+        "@types/ws": "^8",
+        "ts-node-dev": "^2",
+        "typescript": "^5"
+    }
+}

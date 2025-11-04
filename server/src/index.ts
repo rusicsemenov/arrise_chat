@@ -1,0 +1,63 @@
+import http from 'node:http';
+import cors from 'cors';
+import express from 'express';
+import { WebSocketServer } from 'ws';
+
+const app = express();
+app.use(cors());
+
+const server = http.createServer(app);
+
+const wss = new WebSocketServer({ server }); // WS "вешается" на тот же сервер
+
+wss.on('connection', (ws, req) => {
+    const ip = req.socket.remoteAddress;
+    console.log(`✅ Client connected: ${ip}`);
+
+    ws.send(JSON.stringify({ type: 'WELCOME', msg: 'Hello from WS server!' }));
+
+    ws.on('message', (raw) => {
+        if (typeof raw !== 'string') {
+            console.log('Unsupported message type', raw);
+            return;
+        }
+
+        try {
+            const msg = JSON.parse(raw);
+            console.log('📩 Received:', msg);
+
+            if (msg.type === 'PING') {
+                ws.send(JSON.stringify({ type: 'PONG', ts: Date.now() }));
+            }
+
+            if (msg.type === 'MESSAGE') {
+                for (const client of wss.clients) {
+                    if (client.readyState === ws.OPEN) {
+                        client.send(
+                            JSON.stringify({ from: ip, text: msg.text }),
+                        );
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('Error processing message:', e);
+            console.error('Invalid JSON:', JSON.stringify(raw));
+        }
+    });
+
+    ws.on('close', () => console.log(`❌ Client disconnected: ${ip}`));
+    ws.on('error', console.error);
+});
+
+app.get('/products/:id', (_, res) => {
+    res.json({ msg: 'This is CORS-enabled for all origins!' });
+});
+
+app.get('/', (_, res) => {
+    res.send('Hello World! This is an Express server.');
+});
+
+const PORT = process.env.PORT || 3001;
+server.listen(PORT, () =>
+    console.log(`Server running on http://localhost:${PORT}`),
+);
