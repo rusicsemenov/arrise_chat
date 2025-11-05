@@ -1,7 +1,7 @@
 import http from 'node:http';
 import cors from 'cors';
 import express from 'express';
-import { WebSocketServer } from 'ws';
+import {WebSocketServer} from 'ws';
 
 const app = express();
 app.use(cors());
@@ -17,13 +17,18 @@ wss.on('connection', (ws, req) => {
     ws.send(JSON.stringify({ type: 'WELCOME', msg: 'Hello from WS server!' }));
 
     ws.on('message', (raw) => {
-        if (typeof raw !== 'string') {
-            console.log('Unsupported message type', raw);
-            return;
-        }
-
         try {
-            const msg = JSON.parse(raw);
+            let jsonString;
+            if (Buffer.isBuffer(raw)) {
+                jsonString = raw.toString('utf8'); // безопасно для Buffer
+            } else if (typeof raw === 'string') {
+                jsonString = raw;
+            } else {
+                console.error('Unknown message type:', typeof raw);
+                return;
+            }
+
+            const msg = JSON.parse(jsonString);
             console.log('📩 Received:', msg);
 
             if (msg.type === 'PING') {
@@ -49,12 +54,8 @@ wss.on('connection', (ws, req) => {
     ws.on('error', console.error);
 });
 
-app.get('/products/:id', (_, res) => {
-    res.json({ msg: 'This is CORS-enabled for all origins!' });
-});
-
 app.get('/', (_, res) => {
-    res.send('Hello World! This is an Express server.');
+    res.send('This is an Express server.');
 });
 
 const PORT = process.env.PORT || 3001;

@@ -1,5 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import './styles/main.scss';
+import { SocketProvider } from './componts/SocketProvider.tsx';
+import { TestComponentProps } from './componts/TestComponent.tsx';
 
 const appDiv = document.getElementById('app');
 
@@ -8,4 +10,10 @@ if (!appDiv) {
 }
 
 const root = createRoot(appDiv);
-root.render(<h1>Hello, world</h1>);
+root.render(
+    <SocketProvider>
+        <h1>Hello, world</h1>
+        <hr />
+        <TestComponentProps />
+    </SocketProvider>,
+);
