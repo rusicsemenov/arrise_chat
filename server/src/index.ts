@@ -1,7 +1,12 @@
 import http from 'node:http';
 import cors from 'cors';
 import express from 'express';
-import {WebSocketServer} from 'ws';
+import { WebSocketServer } from 'ws';
+
+import { Low } from 'lowdb';
+import { JSONFile } from 'lowdb/node';
+import { Room, User } from '@types';
+import { MessageClass } from '../classes/messageClass';
 
 const app = express();
 app.use(cors());
@@ -10,11 +15,51 @@ const server = http.createServer(app);
 
 const wss = new WebSocketServer({ server }); // WS "вешается" на тот же сервер
 
+let messagesDB: MessageClass | null = null;
+let usersDB: Low<{ users: User[] }> | null = null;
+let roomsDB: Low<{ rooms: Room[] }> | null = null;
+
+async function dbActivate() {
+    messagesDB = new MessageClass();
+    await messagesDB.readDB();
+
+    usersDB = new Low<{ users: User[] }>(new JSONFile('./db/db_users.json'), {
+        users: [],
+    });
+    await usersDB.read();
+
+    roomsDB = new Low<{ rooms: any[] }>(new JSONFile('./db/db_rooms.json'), {
+        rooms: [],
+    });
+    await roomsDB.read();
+}
+
+dbActivate()
+    .then(() => {
+        console.log(messagesDB?.data);
+        console.log(usersDB?.data.users);
+        console.log(roomsDB?.data.rooms);
+    })
+    .catch(console.error);
+
 wss.on('connection', (ws, req) => {
     const ip = req.socket.remoteAddress;
     console.log(`✅ Client connected: ${ip}`);
 
-    ws.send(JSON.stringify({ type: 'WELCOME', msg: 'Hello from WS server!' }));
+    ws.send(
+        JSON.stringify({
+            type: 'WELCOME',
+            msg: 'Hello from WS server!',
+            messages: messagesDB?.data,
+        }),
+    );
+
+    messagesDB?.saveMessage({
+        roomId: '1',
+        senderId: '0',
+        content: `User connected: ${ip}`,
+        type: 'SYSTEM',
+    });
 
     ws.on('message', (raw) => {
         try {
@@ -29,7 +74,6 @@ wss.on('connection', (ws, req) => {
             }
 
             const msg = JSON.parse(jsonString);
-            console.log('📩 Received:', msg);
 
             if (msg.type === 'PING') {
                 ws.send(JSON.stringify({ type: 'PONG', ts: Date.now() }));
@@ -38,11 +82,16 @@ wss.on('connection', (ws, req) => {
             if (msg.type === 'MESSAGE') {
                 for (const client of wss.clients) {
                     if (client.readyState === ws.OPEN) {
-                        client.send(
-                            JSON.stringify({ from: ip, text: msg.text }),
-                        );
+                        client.send(JSON.stringify({ from: ip, text: msg.text }));
                     }
                 }
+
+                messagesDB?.saveMessage({
+                    roomId: '1',
+                    senderId: '1',
+                    content: msg.text,
+                    type: 'USER',
+                });
             }
         } catch (e) {
             console.error('Error processing message:', e);
@@ -59,6 +108,4 @@ app.get('/', (_, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, () =>
-    console.log(`Server running on http://localhost:${PORT}`),
-);
+server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

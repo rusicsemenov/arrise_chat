@@ -1,10 +1,167 @@
+:root {
+  /* Light theme (default) */
+  --background: #f5f7f6;
+  --surface: #ffffff;
+  --text: #202423;
+  --muted: #636a67;
+  --accent: #2b8aef; /* blue accent */
+  --accent-weak: rgba(43,138,239,0.12);
+  --border: rgba(32,36,35,0.08);
+  --shadow: 0 6px 18px rgba(32,36,35,0.08);
+  --glass: rgba(255,255,255,0.6);
+  --radius: 12px;
+}
+
+/* Respect user preference for dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f1413;
+    --surface: #121615;
+    --text: #e6e8e7;
+    --muted: #9ca19f;
+    --accent: #66b1ff;
+    --accent-weak: rgba(102,177,255,0.12);
+    --border: rgba(255,255,255,0.06);
+    --shadow: 0 10px 24px rgba(0,0,0,0.45);
+    --glass: rgba(17,20,19,0.32);
+  }
+}
+/* Explicit dark theme toggle via data-theme="dark" on <html> or <body> */
+[data-theme=dark] {
+  --background: #0f1413;
+  --surface: #121615;
+  --text: #e6e8e7;
+  --muted: #9ca19f;
+  --accent: #66b1ff;
+  --accent-weak: rgba(102,177,255,0.12);
+  --border: rgba(255,255,255,0.06);
+  --shadow: 0 10px 24px rgba(0,0,0,0.45);
+  --glass: rgba(17,20,19,0.32);
+}
+
+/* Base layout & typography */
 * {
-    margin: 0;
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-* h1 {
-    font-size: 2rem;
-    color: red;
+
+html, body {
+  height: 100%;
 }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(180deg, var(--background), color-mix(in srgb, var(--background) 90%, transparent));
+  color: var(--text);
+  line-height: 1.45;
+  transition: background 0.25s ease, color 0.2s ease;
+  padding: 32px;
+}
+
+/* App container */
+.app {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Card component */
+.card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.02));
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+}
+
+h1 {
+  margin: 0 0 12px 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+p {
+  color: var(--muted);
+  margin: 0 0 12px 0;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(43, 138, 239, 0.16);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Theme toggle control (for easy JS wiring) */
+.theme-toggle {
+  display: inline-grid;
+  grid-auto-flow: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.theme-toggle .indicator {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  padding: 4px;
+  background: var(--glass);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 1px solid var(--border);
+  transition: background 0.18s ease, justify-content 0.18s ease;
+}
+
+[data-theme=dark] .theme-toggle .indicator {
+  justify-content: flex-end;
+}
+
+.theme-toggle .dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Message list styling (chat-like) */
+.messages {
+  display: grid;
+  gap: 10px;
+}
+
+.message {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--accent-weak);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+/* Utility: keep only last N messages visible in UI can be done via JS slicing; styles remain the same */
 
 /*# sourceMappingURL=main.css.map */
