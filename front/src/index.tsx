@@ -1,7 +1,8 @@
 import { createRoot } from 'react-dom/client';
 import './styles/main.scss';
-import { App } from './componts/App.tsx';
 import { SocketProvider } from './componts/SocketProvider.tsx';
+import { router } from './routes.tsx';
+import { RouterProvider } from 'react-router';
 
 const appDiv = document.getElementById('app');
 
@@ -10,8 +11,9 @@ if (!appDiv) {
 }
 
 const root = createRoot(appDiv);
+
 root.render(
     <SocketProvider>
-        <App />
+        <RouterProvider router={router} />
     </SocketProvider>,
 );

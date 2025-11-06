@@ -1,11 +1,11 @@
-import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
+import { createContext, ReactElement, useContext, useEffect, useMemo, useState } from 'react';
 import { TDefaultComponentProps } from '../types/default.types.ts';
-import { Type } from '../../../types/socket.types.ts';
+import { Type } from '../../../types';
 
 class WSClient {
     private readonly url: string;
     private reconnectAttempts: number = 0;
-    private maxReconnect: number = 10;
+    private readonly maxReconnect: number = 10;
     private pingInterval: NodeJS.Timeout | null = null;
     private ws: WebSocket | null = null;
 
@@ -105,16 +105,11 @@ export const SocketProvider = ({ children }: TDefaultComponentProps): ReactEleme
         setWsClient(client);
     }, []);
 
+    const value = useMemo(() => ({ wsClient }), [wsClient]);
+
     if (!wsClient) {
         return <div>Connection...</div>;
     }
 
-    return (
-        <SocketContext.Provider value={{ wsClient }}>
-            Hello SocketController
-            <br />
-            {/** biome-ignore lint/a11y/useButtonType: <explanation> */}
-            {children}
-        </SocketContext.Provider>
-    );
+    return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
 };

@@ -28,9 +28,11 @@
         "@reduxjs/toolkit": "^2.10.1",
         "@rive-app/react-canvas": "^4.23.4",
         "express": "^5.1.0",
+        "js-confetti": "^0.13.1",
         "react": "^19.2.0",
         "react-dom": "^19.2.0",
         "react-redux": "^9.2.0",
+        "react-router": "^7.9.5",
         "redux-saga": "^1.4.2"
     },
     "devDependencies": {

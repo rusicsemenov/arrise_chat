@@ -36,9 +36,9 @@ async function dbActivate() {
 
 dbActivate()
     .then(() => {
-        console.log(messagesDB?.data);
-        console.log(usersDB?.data.users);
-        console.log(roomsDB?.data.rooms);
+        // console.log(messagesDB?.data);
+        // console.log(usersDB?.data.users);
+        // console.log(roomsDB?.data.rooms);
     })
     .catch(console.error);
 
@@ -50,7 +50,6 @@ wss.on('connection', (ws, req) => {
         JSON.stringify({
             type: 'WELCOME',
             msg: 'Hello from WS server!',
-            messages: messagesDB?.data,
         }),
     );
 
@@ -75,23 +74,71 @@ wss.on('connection', (ws, req) => {
 
             const msg = JSON.parse(jsonString);
 
-            if (msg.type === 'PING') {
-                ws.send(JSON.stringify({ type: 'PONG', ts: Date.now() }));
-            }
+            switch (msg.type) {
+                case 'HELLO':
+                    console.log(`👋 HELLO from ${ip}:`, msg);
+                    break;
 
-            if (msg.type === 'MESSAGE') {
-                for (const client of wss.clients) {
-                    if (client.readyState === ws.OPEN) {
-                        client.send(JSON.stringify({ from: ip, text: msg.text }));
+                case 'PING':
+                    ws.send(JSON.stringify({ type: 'PONG', ts: Date.now() }));
+                    break;
+
+                case 'NEW_MESSAGE':
+                    for (const client of wss.clients) {
+                        if (client.readyState === ws.OPEN) {
+                            client.send(JSON.stringify({ from: ip, content: msg.content }));
+                        }
                     }
+
+                    messagesDB?.saveMessage({
+                        roomId: msg.roomId,
+                        senderId: msg.senderId,
+                        content: msg.content,
+                        type: 'USER',
+                    });
+                    break;
+
+                case 'LOGIN': {
+                    const { name, password } = msg;
+                    console.log(`User login attempt: ${name} / ${password}`);
+                    break;
                 }
 
-                messagesDB?.saveMessage({
-                    roomId: '1',
-                    senderId: '1',
-                    content: msg.text,
-                    type: 'USER',
-                });
+                case 'GET_ROOM_DATA': {
+                    const { roomId } = msg;
+                    const roomMessages = messagesDB?.data[roomId] || [];
+
+                    ws.send(
+                        JSON.stringify({
+                            type: 'ROOM_MESSAGES',
+                            roomId,
+                            messages: roomMessages,
+                            users: usersDB?.data,
+                        }),
+                    );
+                    break;
+                }
+
+                case 'GET_ROOMS':
+                    ws.send(
+                        JSON.stringify({
+                            type: 'ROOMS_LIST',
+                            rooms: roomsDB?.data.rooms,
+                        }),
+                    );
+                    break;
+
+                case 'GET_USERS':
+                    ws.send(
+                        JSON.stringify({
+                            type: 'USERS_LIST',
+                            users: usersDB?.data.users,
+                        }),
+                    );
+                    break;
+
+                default:
+                    console.warn('Unknown message type:', msg.type);
             }
         } catch (e) {
             console.error('Error processing message:', e);

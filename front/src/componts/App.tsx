@@ -1,5 +1,7 @@
 import { RiveAnimation } from './RiveAnimation.tsx';
 import { useRef } from 'react';
+import { Outlet } from 'react-router';
+import { HamburgerMenu } from './HamburgerMenu.tsx';
 
 export const App = () => {
     const riveRef = useRef<{ switchTime: () => void }>(null);
@@ -9,9 +11,13 @@ export const App = () => {
     };
 
     return (
-        <div>
+        <>
             <RiveAnimation ref={riveRef} />
-            <main></main>
-        </div>
+            <HamburgerMenu />
+
+            <main>
+                <Outlet />
+            </main>
+        </>
     );
 };
