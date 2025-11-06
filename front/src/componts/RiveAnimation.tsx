@@ -9,9 +9,12 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 export const RiveAnimation = forwardRef((_, ref) => {
     const [onOfInput, setOnOfInput] = useState<StateMachineInput | null>(null);
+    const [isDark, setIsDark] = useState(
+        globalThis.matchMedia('(prefers-color-scheme: dark)').matches,
+    );
 
     const { rive, RiveComponent } = useRive({
-        src: './animations/nature.riv',
+        src: '/animations/nature.riv',
         autoplay: true,
         stateMachines: 'Start',
         layout: new Layout({
@@ -25,12 +28,22 @@ export const RiveAnimation = forwardRef((_, ref) => {
         if (machines) {
             setOnOfInput(machines.find((input) => input.name === 'on/off') || null);
         }
+
+        const media = globalThis.matchMedia('(prefers-color-scheme: dark)');
+        const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
+
+        media.addEventListener('change', listener);
+        return () => media.removeEventListener('change', listener);
     }, [rive]);
 
-    const switchTime = () => {
+    const switchTime = (newValue?: boolean) => {
         if (!onOfInput) return;
-        onOfInput.value = !onOfInput.value;
+        onOfInput.value = newValue || !onOfInput.value;
     };
+
+    useEffect(() => {
+        switchTime(isDark);
+    }, [isDark, onOfInput]);
 
     useImperativeHandle(ref, () => ({
         switchTime,
