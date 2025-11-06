@@ -5,10 +5,10 @@
   --text: #202423;
   --muted: #636a67;
   --accent: #2b8aef; /* blue accent */
-  --accent-weak: rgba(43,138,239,0.12);
-  --border: rgba(32,36,35,0.08);
-  --shadow: 0 6px 18px rgba(32,36,35,0.08);
-  --glass: rgba(255,255,255,0.6);
+  --accent-weak: rgba(43, 138, 239, 0.12);
+  --border: rgba(32, 36, 35, 0.08);
+  --shadow: 0 6px 18px rgba(32, 36, 35, 0.08);
+  --glass: rgba(255, 255, 255, 0.6);
   --radius: 12px;
 }
 
@@ -20,10 +20,10 @@
     --text: #e6e8e7;
     --muted: #9ca19f;
     --accent: #66b1ff;
-    --accent-weak: rgba(102,177,255,0.12);
-    --border: rgba(255,255,255,0.06);
-    --shadow: 0 10px 24px rgba(0,0,0,0.45);
-    --glass: rgba(17,20,19,0.32);
+    --accent-weak: rgba(102, 177, 255, 0.12);
+    --border: rgba(255, 255, 255, 0.06);
+    --shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    --glass: rgba(17, 20, 19, 0.32);
   }
 }
 /* Explicit dark theme toggle via data-theme="dark" on <html> or <body> */
@@ -33,10 +33,10 @@
   --text: #e6e8e7;
   --muted: #9ca19f;
   --accent: #66b1ff;
-  --accent-weak: rgba(102,177,255,0.12);
-  --border: rgba(255,255,255,0.06);
-  --shadow: 0 10px 24px rgba(0,0,0,0.45);
-  --glass: rgba(17,20,19,0.32);
+  --accent-weak: rgba(102, 177, 255, 0.12);
+  --border: rgba(255, 255, 255, 0.06);
+  --shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+  --glass: rgba(17, 20, 19, 0.32);
 }
 
 /* Base layout & typography */
@@ -49,6 +49,7 @@ html, body {
 }
 
 body {
+  position: relative;
   margin: 0;
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   -webkit-font-smoothing: antialiased;
@@ -58,6 +59,11 @@ body {
   line-height: 1.45;
   transition: background 0.25s ease, color 0.2s ease;
   padding: 32px;
+}
+
+main {
+  position: relative;
+  z-index: 1;
 }
 
 /* App container */
@@ -163,5 +169,13 @@ p {
 }
 
 /* Utility: keep only last N messages visible in UI can be done via JS slicing; styles remain the same */
+.rive-animation {
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
 
 /*# sourceMappingURL=main.css.map */
