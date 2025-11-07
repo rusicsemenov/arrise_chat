@@ -104,9 +104,9 @@ const Room = () => {
 
     return (
         <div className="room flex1 flex-column gap-2">
-            <div className="flex gap-2 card">
+            <div className="flex gap-2 card align-center">
                 <h1>Room: {id}</h1>
-                <Link to="/rooms" className="btn ml-auto secondary">
+                <Link to="/rooms" className="btn ml-auto">
                     back to rooms
                 </Link>
             </div>
