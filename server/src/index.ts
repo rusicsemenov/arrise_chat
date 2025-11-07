@@ -172,11 +172,61 @@ dbActivate().then(() => {
                     case 'GET_ROOMS':
                         ws.send(
                             JSON.stringify({
-                                type: 'ROOMS_LIST',
+                                type: 'GET_ROOMS',
                                 rooms: roomsDB?.data.rooms,
                             }),
                         );
                         break;
+
+                    case 'CREATE_ROOM': {
+                        const { name, description } = msg.payload;
+                        const newRoom: Room = {
+                            id: uuidv4(),
+                            name,
+                            description,
+                            createdAt: new Date().toLocaleString('en-US'),
+                            members: [],
+                        };
+                        roomsDB?.data.rooms.push(newRoom);
+                        await roomsDB?.write();
+
+                        sendToAllClients({
+                            type: 'ROOM_CREATED',
+                            room: newRoom,
+                        });
+                        break;
+                    }
+
+                    case 'DELETE_ROOMS': {
+                        const { roomId } = msg;
+                        if (!roomsDB) {
+                            console.error('Rooms DB not initialized');
+                            break;
+                        }
+
+                        const roomIndex = roomsDB.data.rooms.findIndex(
+                            (room) => room.id === roomId,
+                        );
+                        if (roomIndex === -1) {
+                            console.warn(`Room not found: ${roomId}`);
+                            ws.send(
+                                JSON.stringify({
+                                    type: 'ERROR',
+                                    message: 'Room not found',
+                                }),
+                            );
+                            break;
+                        }
+
+                        roomsDB.data.rooms.splice(roomIndex, 1);
+                        await roomsDB.write();
+
+                        sendToAllClients({
+                            type: 'ROOM_DELETED',
+                            roomId,
+                        });
+                        break;
+                    }
 
                     case 'GET_USERS':
                         ws.send(
@@ -198,6 +248,15 @@ dbActivate().then(() => {
 
         ws.on('close', () => console.log(`❌ Client disconnected: ${ip}`));
         ws.on('error', console.error);
+
+        function sendToAllClients(data: any) {
+            const message = JSON.stringify(data);
+            for (const client of wss.clients) {
+                if (client.readyState === ws.OPEN) {
+                    client.send(message);
+                }
+            }
+        }
     });
 
     app.get('/', (_, res) => {

@@ -3,10 +3,8 @@ import { Link } from 'react-router';
 import { useAuthContext } from './AuthProvider.tsx';
 
 const links = [
-    { name: 'Home', url: '/' },
     { name: 'Rooms', url: '/rooms' },
     { name: 'Users', url: '/users' },
-    { name: 'Room1', url: '/room/1' },
 ];
 
 export const HamburgerMenu = (): ReactElement | null => {

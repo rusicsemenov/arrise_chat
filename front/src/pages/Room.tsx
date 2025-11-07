@@ -1,4 +1,4 @@
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { useSocketContext } from '../componts/SocketProvider.tsx';
 import { FormEvent, useEffect, useRef } from 'react';
 import { Message } from '../../../types';
@@ -104,7 +104,12 @@ const Room = () => {
 
     return (
         <div className="card room flex1 flex-column gap-2">
-            <h1>Room: {id}</h1>
+            <div className="flex gap-2">
+                <h1>Room: {id}</h1>
+                <Link to="/rooms" className="btn ml-auto secondary">
+                    back to rooms
+                </Link>
+            </div>
             <div className="messages flex flex-1 w100">
                 <div className="scrollable flex-column gap-1 w100">
                     {msg.map(({ id, type, content, sentAt, senderId }) => (

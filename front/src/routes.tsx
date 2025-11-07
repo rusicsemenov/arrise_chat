@@ -17,10 +17,10 @@ export const router = createBrowserRouter([
                 index: true,
                 Component: Welcome,
             },
-            {
-                path: '/users',
-                Component: Users,
-            },
+            // {
+            //     path: '/users',
+            //     Component: Users,
+            // },
             {
                 path: '/rooms',
                 Component: Rooms,

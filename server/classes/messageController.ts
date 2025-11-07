@@ -74,6 +74,6 @@ function getNewMessage(data: Omit<Message, 'id' | 'sentAt'>): Message {
     return {
         ...data,
         id: uuidv4(),
-        sentAt: new Date().toISOString(),
+        sentAt: new Date().toLocaleString('en-US'),
     };
 }
