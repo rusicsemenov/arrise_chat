@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { Link } from 'react-router';
+import { useAuthContext } from './AuthProvider.tsx';
 
 const links = [
     { name: 'Home', url: '/' },
@@ -8,8 +9,13 @@ const links = [
     { name: 'Room1', url: '/room/1' },
 ];
 
-export const HamburgerMenu = () => {
+export const HamburgerMenu = (): ReactElement | null => {
     const [isOpen, setIsOpen] = useState(false);
+    const { isAuth, logout } = useAuthContext();
+
+    if (!isAuth) {
+        return null;
+    }
 
     return (
         <>
@@ -40,6 +46,9 @@ export const HamburgerMenu = () => {
                             </li>
                         ))}
                     </ul>
+                    <button onClick={logout} className="btn w100">
+                        Logout
+                    </button>
                 </nav>
             )}
         </>

@@ -1,1 +1,1 @@
-export type Type = 'HELLO' | 'PING' | 'MESSAGE' | string;
+export type Type = 'HELLO' | 'PING' | 'MESSAGE' | (string & {});

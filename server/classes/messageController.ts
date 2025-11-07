@@ -9,7 +9,7 @@ type MessageRecord = Record<string, Message[]>;
 const MESSAGE_LIMIT = 20;
 const defaultMessagesData: MessageRecord = {};
 
-export class MessageClass {
+export class MessageController {
     public messagesDB: Low<MessageRecord> | null = null;
     private wrightController: WrightController | null = null;
 
@@ -40,7 +40,6 @@ export class MessageClass {
         if (this.messagesDB) {
             await this.messagesDB.read();
         }
-        console.log(this.messagesDB);
         return this.messagesDB;
     }
 

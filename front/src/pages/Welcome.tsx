@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSocketContext } from '../componts/SocketProvider.tsx';
+import { useAuthContext } from '../componts/AuthProvider.tsx';
 
 // Will be better to use react-hook-form, but will do it without it for simplicity
 
@@ -10,6 +11,7 @@ const Welcome = () => {
 
     const navigate = useNavigate();
     const { wsClient } = useSocketContext();
+    const { isAuth } = useAuthContext();
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -40,10 +42,14 @@ const Welcome = () => {
             console.log('Name:', name);
 
             wsClient?.send('MESSAGE', { type: 'LOGIN', name: validName, password: validPassword });
-
-            navigate('/rooms');
         }
     };
+
+    useEffect(() => {
+        if (isAuth) {
+            navigate('/rooms');
+        }
+    }, [isAuth]);
 
     useEffect(() => {
         nameRef.current?.focus();
@@ -53,6 +59,7 @@ const Welcome = () => {
         <div className="welcome">
             <div className="card content">
                 <h1>Welcome to the Chat Application!</h1>
+                <p>Use existing account or create a new one by entering your name and password</p>
 
                 <form onSubmit={handleSubmit} autoComplete="off">
                     <label htmlFor="name">Name</label>

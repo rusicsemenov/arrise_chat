@@ -1,6 +1,7 @@
 import { createContext, ReactElement, useContext, useEffect, useMemo, useState } from 'react';
 import { TDefaultComponentProps } from '../types/default.types.ts';
-import { Type } from '../../../types';
+import { MessageHandler, Type } from '../../../types';
+import { toast, ToastContainer } from 'react-toastify';
 
 class WSClient {
     private readonly url: string;
@@ -8,6 +9,7 @@ class WSClient {
     private readonly maxReconnect: number = 10;
     private pingInterval: NodeJS.Timeout | null = null;
     private ws: WebSocket | null = null;
+    private listeners: Record<string, Set<MessageHandler>> = {};
 
     constructor(url: string) {
         this.url = url;
@@ -21,17 +23,14 @@ class WSClient {
         this.ws.onopen = () => {
             console.log('✅ Connected');
             this.reconnectAttempts = 0;
-
-            // отправляем "HELLO" при каждом новом подключении
             this.send('HELLO', { client: 'browser', user: 'guest' });
-
-            // запускаем ping
             this.startPing();
         };
 
         this.ws.onmessage = (event) => {
             try {
                 const msg = JSON.parse(event.data);
+                this.dispatch(msg.type, msg);
                 console.log('📩', msg);
             } catch {
                 console.log('📩 Raw message:', event.data);
@@ -68,6 +67,15 @@ class WSClient {
         this.pingInterval && clearInterval(this.pingInterval);
     }
 
+    on(type: string, handler: MessageHandler) {
+        if (!this.listeners[type]) this.listeners[type] = new Set();
+        this.listeners[type].add(handler);
+    }
+
+    off(type: string, handler: MessageHandler) {
+        this.listeners[type]?.delete(handler);
+    }
+
     scheduleReconnect() {
         if (this.reconnectAttempts >= this.maxReconnect) {
             console.error('❌ Too many reconnect attempts');
@@ -79,6 +87,16 @@ class WSClient {
         this.reconnectAttempts++;
 
         setTimeout(() => this.connect(), timeout);
+    }
+
+    private dispatch(type: string, data: any) {
+        if (!this.listeners[type]) {
+            return;
+        }
+
+        for (const handler of this.listeners[type]) {
+            handler(data);
+        }
     }
 }
 
@@ -105,11 +123,22 @@ export const SocketProvider = ({ children }: TDefaultComponentProps): ReactEleme
         setWsClient(client);
     }, []);
 
+    useEffect(() => {
+        wsClient?.on('ERROR', (data: { message: string }) => {
+            toast(data.message, { type: 'error' });
+        });
+    }, [wsClient]);
+
     const value = useMemo(() => ({ wsClient }), [wsClient]);
 
     if (!wsClient) {
         return <div>Connection...</div>;
     }
 
-    return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>;
+    return (
+        <SocketContext.Provider value={value}>
+            {children}
+            <ToastContainer />
+        </SocketContext.Provider>
+    );
 };

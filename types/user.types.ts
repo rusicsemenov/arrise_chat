@@ -6,3 +6,5 @@ export type User = {
     registeredAt: string;
     token?: string;
 }
+
+export type SanitizedUser = Pick<User, 'id' | 'name' | 'email' | 'token'>;

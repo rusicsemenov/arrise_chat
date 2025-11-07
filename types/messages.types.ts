@@ -8,3 +8,5 @@ export type Message = {
 }
 
 export type MessageType = 'USER' | 'SYSTEM' | (string & {});
+
+export type MessageHandler = (data: any) => void;
