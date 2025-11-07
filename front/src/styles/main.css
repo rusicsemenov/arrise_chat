@@ -27,6 +27,19 @@
     --glass: rgba(17, 20, 19, 0.32);
   }
 }
+/* Explicit light theme toggle via data-theme="light" on <html> or <body> */
+[data-theme=light] {
+  --background: #f5f7f6;
+  --surface: #ffffff;
+  --text: #202423;
+  --muted: #636a67;
+  --accent: #2b8aef; /* blue accent */
+  --accent-weak: rgba(43, 138, 239, 0.12);
+  --border: rgba(32, 36, 35, 0.08);
+  --shadow: 0 6px 18px rgba(32, 36, 35, 0.08);
+  --glass: rgba(255, 255, 255, 0.6);
+}
+
 /* Explicit dark theme toggle via data-theme="dark" on <html> or <body> */
 [data-theme=dark] {
   --background: #0f1413;
@@ -145,10 +158,25 @@ main {
 
 /* Theme toggle control (for easy JS wiring) */
 .theme-toggle {
-  display: inline-grid;
-  grid-auto-flow: column;
-  gap: 8px;
+  display: flex;
   align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-size: inherit;
+  font-family: inherit;
+  transition: background 0.15s ease;
+}
+.theme-toggle:hover {
+  background: var(--accent-weak);
+}
+.theme-toggle:active {
+  opacity: 0.8;
 }
 
 .theme-toggle .indicator {
@@ -160,8 +188,9 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
-  border: 1px solid var(--border);
+  border: 1px solid var(--text);
   transition: background 0.18s ease, justify-content 0.18s ease;
+  flex-shrink: 0;
 }
 
 [data-theme=dark] .theme-toggle .indicator {
@@ -172,8 +201,9 @@ main {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: var(--surface);
+  background: var(--text);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.18s ease;
 }
 
 /* Message list styling (chat-like) */
@@ -382,6 +412,10 @@ main {
 }
 .menu a:hover {
   background: var(--accent-weak);
+}
+.menu .menu-footer {
+  padding: 8px 16px;
+  border-top: 1px solid var(--border);
 }
 
 /* MODAL */

@@ -31,8 +31,15 @@ export const RiveAnimation = forwardRef((_, ref) => {
 
         const media = globalThis.matchMedia('(prefers-color-scheme: dark)');
         const listener = (e: MediaQueryListEvent) => setIsDark(e.matches);
-
         media.addEventListener('change', listener);
+
+        const html = document.documentElement; // <html>
+        const observer = new MutationObserver(() => {
+            const theme = html.dataset.theme;
+            setIsDark(theme === 'dark');
+        });
+        observer.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+
         return () => media.removeEventListener('change', listener);
     }, [rive]);
 

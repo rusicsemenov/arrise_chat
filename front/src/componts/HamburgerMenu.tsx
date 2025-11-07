@@ -1,6 +1,7 @@
 import { ReactElement, useState } from 'react';
 import { Link } from 'react-router';
 import { useAuthContext } from './AuthProvider.tsx';
+import { ThemeToggle } from './ThemeToggle.tsx';
 
 const links = [
     { name: 'Rooms', url: '/rooms' },
@@ -43,10 +44,15 @@ export const HamburgerMenu = (): ReactElement | null => {
                                 <Link to={link.url}>{link.name}</Link>
                             </li>
                         ))}
+                        <li>
+                            <ThemeToggle />
+                        </li>
                     </ul>
-                    <button onClick={logout} className="btn w100">
-                        Logout
-                    </button>
+                    <div className="menu-footer">
+                        <button onClick={logout} className="btn w100">
+                            Logout
+                        </button>
+                    </div>
                 </nav>
             )}
         </>
