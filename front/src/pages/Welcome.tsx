@@ -26,6 +26,11 @@ const Welcome = () => {
         const validPassword = sanitizedPassword(password);
 
         if (validName) {
+            if (validName.length > 20) {
+                setError((prev) => ({ ...prev, name: 'Name must be less than 20 characters' }));
+                return;
+            }
+
             setError((prev) => ({ ...prev, name: '' }));
         } else {
             setError((prev) => ({ ...prev, name: 'Name is required' }));
