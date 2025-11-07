@@ -1,0 +1,83 @@
+/* Card component */
+.card {
+    backdrop-filter: blur(6px);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    background-color: var(--glass);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(43, 138, 239, 0.16);
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        opacity 0.12s ease;
+    text-transform: uppercase;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: none;
+}
+
+.btn.danger {
+    background: #e03e2f;
+    box-shadow: 0 6px 16px rgba(224, 62, 47, 0.16);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Theme toggle control (for easy JS wiring) */
+.theme-toggle {
+    display: inline-grid;
+    grid-auto-flow: column;
+    gap: 8px;
+    align-items: center;
+}
+
+.theme-toggle .indicator {
+    width: 44px;
+    height: 26px;
+    border-radius: 999px;
+    padding: 4px;
+    background: var(--glass);
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    border: 1px solid var(--border);
+    transition:
+        background 0.18s ease,
+        justify-content 0.18s ease;
+}
+
+[data-theme='dark'] .theme-toggle .indicator {
+    justify-content: flex-end;
+}
+
+.theme-toggle .dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--surface);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+

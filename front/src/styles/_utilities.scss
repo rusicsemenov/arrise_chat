@@ -1,0 +1,54 @@
+/* Utilities */
+.rive-animation {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.w100 {
+    width: 100%;
+}
+
+.flex1 {
+    flex: 1;
+}
+
+.flex {
+    display: flex;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.ml-auto {
+    margin-left: auto;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+@for $i from 1 through 8 {
+    .gap-#{$i} {
+        gap: calc(var(--spacing) * #{$i});
+    }
+}
+
+

@@ -103,14 +103,14 @@ const Room = () => {
     };
 
     return (
-        <div className="card room flex1 flex-column gap-2">
-            <div className="flex gap-2">
+        <div className="room flex1 flex-column gap-2">
+            <div className="flex gap-2 card">
                 <h1>Room: {id}</h1>
                 <Link to="/rooms" className="btn ml-auto secondary">
                     back to rooms
                 </Link>
             </div>
-            <div className="messages flex flex-1 w100">
+            <div className="card messages flex flex1 w100">
                 <div className="scrollable flex-column gap-1 w100">
                     {msg.map(({ id, type, content, sentAt, senderId }) => (
                         <div key={id} className={`msg ${type === 'SYSTEM' ? 'system' : ''}`}>

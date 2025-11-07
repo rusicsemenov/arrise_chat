@@ -1,0 +1,44 @@
+:root {
+    /* Light theme (default) */
+    --background: #f5f7f6;
+    --surface: #ffffff;
+    --text: #202423;
+    --muted: #636a67;
+    --accent: #2b8aef; /* blue accent */
+    --accent-weak: rgba(43, 138, 239, 0.12);
+    --border: rgba(32, 36, 35, 0.08);
+    --shadow: 0 6px 18px rgba(32, 36, 35, 0.08);
+    --glass: rgba(255, 255, 255, 0.6);
+    --radius: 12px;
+    --spacing: 8px;
+}
+
+/* Respect user preference for dark mode */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0f1413;
+        --surface: #121615;
+        --text: #e6e8e7;
+        --muted: #9ca19f;
+        --accent: #66b1ff;
+        --accent-weak: rgba(102, 177, 255, 0.12);
+        --border: rgba(255, 255, 255, 0.06);
+        --shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+        --glass: rgba(17, 20, 19, 0.32);
+    }
+}
+
+/* Explicit dark theme toggle via data-theme="dark" on <html> or <body> */
+[data-theme='dark'] {
+    --background: #0f1413;
+    --surface: #121615;
+    --text: #e6e8e7;
+    --muted: #9ca19f;
+    --accent: #66b1ff;
+    --accent-weak: rgba(102, 177, 255, 0.12);
+    --border: rgba(255, 255, 255, 0.06);
+    --shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    --glass: rgba(17, 20, 19, 0.32);
+}
+
+

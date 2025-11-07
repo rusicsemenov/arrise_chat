@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { Room } from '../../../types';
 import { Link } from 'react-router';
 import AddRoom from '../componts/AddRoom.tsx';
+import { useAuthContext } from '../componts/AuthProvider.tsx';
 
 const Rooms = () => {
     const [rooms, setRooms] = useState<Room[]>([]);
     const { wsClient } = useSocketContext();
+    const { userData } = useAuthContext();
 
     useEffect(() => {
         if (!wsClient) {
@@ -53,8 +55,8 @@ const Rooms = () => {
 
     return (
         <>
-            <div className="flex gap-2 align-center">
-                <h1>Rooms</h1>
+            <div className="flex gap-2 align-center card">
+                <h1>Welcome to the rooms {userData?.name}</h1>
                 <AddRoom />
             </div>
             <ul className="room-list gap-2">

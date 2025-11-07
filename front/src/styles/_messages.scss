@@ -1,0 +1,44 @@
+/* Message list styling (chat-like) */
+.messages {
+    min-height: 0;
+    .scrollable {
+        height: 100%;
+        overflow-y: auto;
+    }
+}
+
+.message {
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: var(--accent-weak);
+    color: var(--text);
+    border: 1px solid var(--border);
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.msg {
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 8px;
+    background: var(--glass);
+    border-radius: 8px;
+    padding: 8px;
+}
+.msg.system {
+    opacity: 0.75;
+    font-style: italic;
+}
+.msg .user {
+    color: #4f8cff;
+}
+.msg .ts {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* Utility: keep only last N messages visible in UI can be done via JS slicing; styles remain the same */
+
+

@@ -1,0 +1,56 @@
+/* Base layout & typography */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    position: relative;
+    margin: 0;
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        'Segoe UI',
+        Roboto,
+        'Helvetica Neue',
+        Arial;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(
+        180deg,
+        var(--background),
+        color-mix(in srgb, var(--background) 90%, transparent)
+    );
+    color: var(--text);
+    line-height: 1.45;
+    transition:
+        background 0.25s ease,
+        color 0.2s ease;
+}
+
+h1 {
+    margin: 0 0 12px 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+p {
+    color: var(--muted);
+    margin: 0 0 12px 0;
+}
+
+li {
+    list-style: none;
+}
+
+ul {
+    padding: 0;
+}
+
+
