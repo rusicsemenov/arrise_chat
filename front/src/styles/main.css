@@ -228,9 +228,6 @@ main {
 }
 
 .msg {
-  display: grid;
-  grid-template-columns: 70px 1fr auto;
-  gap: 8px;
   background: var(--glass);
   border-radius: 8px;
   padding: 8px;
@@ -242,12 +239,14 @@ main {
 }
 
 .msg .user {
-  color: #4f8cff;
+  font-weight: 300;
+  font-size: 12px;
+  align-items: end;
 }
 
-.msg .ts {
+.msg .time {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 10px;
 }
 
 /* Utility: keep only last N messages visible in UI can be done via JS slicing; styles remain the same */
@@ -290,6 +289,18 @@ main {
   margin-left: auto;
 }
 
+.mr-auto {
+  margin-right: auto;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
 .justify-between {
   justify-content: space-between;
 }
@@ -302,32 +313,224 @@ main {
   gap: calc(var(--spacing) * 1);
 }
 
+.mr-1 {
+  margin-right: calc(var(--spacing) * 1);
+}
+
+.ml-1 {
+  margin-left: calc(var(--spacing) * 1);
+}
+
+.mt-1 {
+  margin-top: calc(var(--spacing) * 1);
+}
+
+.mb-1 {
+  margin-bottom: calc(var(--spacing) * 1);
+}
+
+.m-1 {
+  margin: calc(var(--spacing) * 1);
+}
+
+.p-1 {
+  padding: calc(var(--spacing) * 1);
+}
+
 .gap-2 {
   gap: calc(var(--spacing) * 2);
+}
+
+.mr-2 {
+  margin-right: calc(var(--spacing) * 2);
+}
+
+.ml-2 {
+  margin-left: calc(var(--spacing) * 2);
+}
+
+.mt-2 {
+  margin-top: calc(var(--spacing) * 2);
+}
+
+.mb-2 {
+  margin-bottom: calc(var(--spacing) * 2);
+}
+
+.m-2 {
+  margin: calc(var(--spacing) * 2);
+}
+
+.p-2 {
+  padding: calc(var(--spacing) * 2);
 }
 
 .gap-3 {
   gap: calc(var(--spacing) * 3);
 }
 
+.mr-3 {
+  margin-right: calc(var(--spacing) * 3);
+}
+
+.ml-3 {
+  margin-left: calc(var(--spacing) * 3);
+}
+
+.mt-3 {
+  margin-top: calc(var(--spacing) * 3);
+}
+
+.mb-3 {
+  margin-bottom: calc(var(--spacing) * 3);
+}
+
+.m-3 {
+  margin: calc(var(--spacing) * 3);
+}
+
+.p-3 {
+  padding: calc(var(--spacing) * 3);
+}
+
 .gap-4 {
   gap: calc(var(--spacing) * 4);
+}
+
+.mr-4 {
+  margin-right: calc(var(--spacing) * 4);
+}
+
+.ml-4 {
+  margin-left: calc(var(--spacing) * 4);
+}
+
+.mt-4 {
+  margin-top: calc(var(--spacing) * 4);
+}
+
+.mb-4 {
+  margin-bottom: calc(var(--spacing) * 4);
+}
+
+.m-4 {
+  margin: calc(var(--spacing) * 4);
+}
+
+.p-4 {
+  padding: calc(var(--spacing) * 4);
 }
 
 .gap-5 {
   gap: calc(var(--spacing) * 5);
 }
 
+.mr-5 {
+  margin-right: calc(var(--spacing) * 5);
+}
+
+.ml-5 {
+  margin-left: calc(var(--spacing) * 5);
+}
+
+.mt-5 {
+  margin-top: calc(var(--spacing) * 5);
+}
+
+.mb-5 {
+  margin-bottom: calc(var(--spacing) * 5);
+}
+
+.m-5 {
+  margin: calc(var(--spacing) * 5);
+}
+
+.p-5 {
+  padding: calc(var(--spacing) * 5);
+}
+
 .gap-6 {
   gap: calc(var(--spacing) * 6);
+}
+
+.mr-6 {
+  margin-right: calc(var(--spacing) * 6);
+}
+
+.ml-6 {
+  margin-left: calc(var(--spacing) * 6);
+}
+
+.mt-6 {
+  margin-top: calc(var(--spacing) * 6);
+}
+
+.mb-6 {
+  margin-bottom: calc(var(--spacing) * 6);
+}
+
+.m-6 {
+  margin: calc(var(--spacing) * 6);
+}
+
+.p-6 {
+  padding: calc(var(--spacing) * 6);
 }
 
 .gap-7 {
   gap: calc(var(--spacing) * 7);
 }
 
+.mr-7 {
+  margin-right: calc(var(--spacing) * 7);
+}
+
+.ml-7 {
+  margin-left: calc(var(--spacing) * 7);
+}
+
+.mt-7 {
+  margin-top: calc(var(--spacing) * 7);
+}
+
+.mb-7 {
+  margin-bottom: calc(var(--spacing) * 7);
+}
+
+.m-7 {
+  margin: calc(var(--spacing) * 7);
+}
+
+.p-7 {
+  padding: calc(var(--spacing) * 7);
+}
+
 .gap-8 {
   gap: calc(var(--spacing) * 8);
+}
+
+.mr-8 {
+  margin-right: calc(var(--spacing) * 8);
+}
+
+.ml-8 {
+  margin-left: calc(var(--spacing) * 8);
+}
+
+.mt-8 {
+  margin-top: calc(var(--spacing) * 8);
+}
+
+.mb-8 {
+  margin-bottom: calc(var(--spacing) * 8);
+}
+
+.m-8 {
+  margin: calc(var(--spacing) * 8);
+}
+
+.p-8 {
+  padding: calc(var(--spacing) * 8);
 }
 
 /* Welcome page */

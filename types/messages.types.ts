@@ -4,6 +4,7 @@ export type Message = {
     senderId: string;
     content: string;
     sentAt: string;
+    userName: string;
     type: MessageType
 }
 

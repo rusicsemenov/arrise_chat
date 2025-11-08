@@ -1,99 +1,80 @@
 import { Link, useParams } from 'react-router';
 import { useSocketContext } from '../componts/SocketProvider.tsx';
-import { FormEvent, useEffect, useRef } from 'react';
-import { Message } from '../../../types';
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { Message, RoomData } from '../../../types';
 import JSConfetti from 'js-confetti';
+import { useAuthContext } from '../componts/AuthProvider.tsx';
 
 const jsConfetti = new JSConfetti();
 
-/**
- * export type Message = {
- *     id: string;
- *     roomId: string;
- *     senderId: string;
- *     content: string;
- *     sentAt: string;
- *     type: MessageType
- * }
- */
-
-const msg: Message[] = [
-    {
-        id: '1',
-        roomId: '1',
-        senderId: 'system',
-        content: 'Welcome to the room!',
-        sentAt: new Date().toISOString(),
-        type: 'SYSTEM',
-    },
-    {
-        id: '2',
-        roomId: '1',
-        senderId: 'user1',
-        content: 'Hello everyone!',
-        sentAt: new Date().toISOString(),
-        type: 'USER',
-    },
-    {
-        id: '3',
-        roomId: '1',
-        senderId: 'user2',
-        content: 'Hi user1!',
-        sentAt: new Date().toISOString(),
-        type: 'USER',
-    },
-    {
-        roomId: '1',
-        senderId: '0',
-        content: 'User connected: ::1',
-        type: 'SYSTEM',
-        id: '3ed02002-9daa-4d52-bce8-2e6b327ea73f',
-        sentAt: '2025-11-06T22:20:44.816Z',
-    },
-    {
-        roomId: '1',
-        senderId: '0',
-        content: 'User connected: ::1',
-        type: 'SYSTEM',
-        id: 'bce261d3-dca9-4cb6-942f-7659bf5fb462',
-        sentAt: '2025-11-06T22:20:56.335Z',
-    },
-    {
-        roomId: '1',
-        senderId: '0',
-        content: 'User connected: ::1',
-        type: 'SYSTEM',
-        id: '2cdffce8-6ebf-49dc-9544-c648c410fd24',
-        sentAt: '2025-11-06T22:22:57.555Z',
-    },
-];
+const hashStringToHue = (str: string) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return Math.abs(hash % 360);
+};
 
 const Room = () => {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [roomData, setRoomData] = useState<RoomData | null>(null);
     const params = useParams();
     const { id } = params;
     const { wsClient } = useSocketContext();
+    const { userData } = useAuthContext();
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        wsClient?.send('MESSAGE', { type: 'GET_ROOM_DATA', roomId: id });
-        inputRef.current?.focus();
-    }, [wsClient, id]);
+        if (!wsClient || !id) {
+            return;
+        }
 
-    const showConfetti = () => {
-        jsConfetti.addConfetti().then();
-    };
+        wsClient.send('MESSAGE', { type: 'GET_ROOM_DATA', roomId: id });
+        wsClient.send('MESSAGE', { type: 'JOIN_ROOM', roomId: id, userName: userData?.name });
+        inputRef.current?.focus();
+
+        const handleRoomData = (socketRoomData: RoomData) => {
+            if (socketRoomData.roomId !== id) {
+                return;
+            }
+            setMessages(socketRoomData.messages);
+            setRoomData(socketRoomData);
+        };
+        wsClient.on('ROOM_DATA', handleRoomData);
+
+        const handleMessageReceive = (msg: { message: Message }) => {
+            if (msg.message.roomId !== id) {
+                return;
+            }
+
+            if (/🎉/.test(msg.message.content)) {
+                jsConfetti.addConfetti().then();
+            }
+
+            setMessages((prev) => [...prev, msg.message]);
+            requestAnimationFrame(scrollToBottom);
+        };
+        wsClient.on('NEW_MESSAGE', handleMessageReceive);
+
+        return () => {
+            wsClient.off('ROOM_DATA', handleRoomData);
+            wsClient.off('NEW_MESSAGE', handleMessageReceive);
+        };
+    }, [wsClient, id]);
 
     const onSubmit = (e: FormEvent) => {
         e.preventDefault();
-        showConfetti();
 
-        const message = inputRef.current?.value;
+        const message = inputRef.current?.value.trim();
+
+        console.log('Sending message:', message);
         if (!message) return;
 
         wsClient?.send('MESSAGE', {
             type: 'NEW_MESSAGE',
             roomId: id,
-            senderId: 'user123',
+            senderId: userData?.id || 'unknown',
+            userName: userData?.name || 'Unknown',
             content: message,
         });
 
@@ -102,23 +83,109 @@ const Room = () => {
         }
     };
 
+    const scrollToBottom = () => {
+        const messagesContainer = document.querySelector('.messages .scrollable');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    };
+
+    const addConfettiSymbol = (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (inputRef.current) {
+            inputRef.current.value += ' 🎉';
+            inputRef.current.focus();
+        }
+    };
+
+    let previousMessageDay: string | null = null;
+    let showDateSeparator: boolean = false;
+
+    let previousMessageSenderId: string | null = null;
+    let showUserInfo: boolean = false;
+
+    let time: string | null = null;
+
+    let currentUserMessage = false;
+
     return (
         <div className="room flex1 flex-column gap-2">
             <div className="flex gap-2 card align-center">
-                <h1>Room: {id}</h1>
+                <div>
+                    <h1>{roomData?.name ?? 'Unknown name'}</h1>
+                    {roomData?.description ? <p>{roomData?.description}</p> : null}
+                </div>
                 <Link to="/rooms" className="btn ml-auto">
                     back to rooms
                 </Link>
             </div>
             <div className="card messages flex flex1 w100">
                 <div className="scrollable flex-column gap-1 w100">
-                    {msg.map(({ id, type, content, sentAt, senderId }) => (
-                        <div key={id} className={`msg ${type === 'SYSTEM' ? 'system' : ''}`}>
-                            <span className="user">{senderId}</span>
-                            <span className="text">{content}</span>
-                            <span className="ts">{sentAt}</span>
-                        </div>
-                    ))}
+                    {messages.map(({ id, type, content, sentAt, userName, senderId }) => {
+                        const [currentDay, time] = sentAt.split(',');
+                        const showDateSeparator = previousMessageDay !== currentDay;
+                        previousMessageDay = currentDay;
+
+                        showUserInfo = previousMessageSenderId !== senderId;
+                        previousMessageSenderId = senderId || 'unknown';
+
+                        currentUserMessage = senderId === userData?.id;
+
+                        return (
+                            <>
+                                {showDateSeparator ? (
+                                    <div key={id + '-date-sep'} className="text-center">
+                                        {previousMessageDay}
+                                    </div>
+                                ) : null}
+
+                                <div
+                                    key={id}
+                                    className={`msg flex-column p-1 ${type === 'SYSTEM' ? 'system' : ''} ${currentUserMessage ? 'ml-auto text-right' : 'mr-auto '}`}
+                                >
+                                    {showUserInfo && (
+                                        <span
+                                            className="user flex gap-1 mb-2"
+                                            style={{
+                                                color: `hsl(${hashStringToHue(userName)}, 70%, 30%)`,
+                                                flexDirection: currentUserMessage
+                                                    ? 'row-reverse'
+                                                    : 'row',
+                                            }}
+                                        >
+                                            <svg
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    fill="currentColor"
+                                                />
+                                                <text
+                                                    x="12"
+                                                    y="16"
+                                                    textAnchor="middle"
+                                                    fontSize="12"
+                                                    fill="#ffffff"
+                                                    fontFamily="Arial, sans-serif"
+                                                >
+                                                    {userName.charAt(0).toUpperCase()}
+                                                </text>
+                                            </svg>
+                                            {userName}
+                                        </span>
+                                    )}
+                                    <span className="text">{content}</span>
+                                    <span className="time mt-1">{time}</span>
+                                </div>
+                            </>
+                        );
+                    })}
                 </div>
             </div>
             <form className="footer flex gap-2" onSubmit={onSubmit}>
@@ -128,8 +195,11 @@ const Room = () => {
                     placeholder="Type your message..."
                     ref={inputRef}
                 />
-                <button onClick={showConfetti} className="btn">
+                <button type="submit" className="btn">
                     Send
+                </button>
+                <button className="btn secondary flex" onClick={addConfettiSymbol} tabIndex={-1}>
+                    add 🎉
                 </button>
             </form>
         </div>

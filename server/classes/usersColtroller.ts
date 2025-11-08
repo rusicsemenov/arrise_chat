@@ -27,7 +27,6 @@ export class UsersCollector {
         if (this.usersDB) {
             await this.usersDB.read();
         }
-        console.log(this.usersDB);
         return this.usersDB;
     }
 

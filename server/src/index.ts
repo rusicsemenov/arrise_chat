@@ -5,7 +5,7 @@ import { WebSocketServer } from 'ws';
 
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
-import { Room, SanitizedUser } from '@types';
+import { Message, Room, RoomData, SanitizedUser } from '@types';
 import { MessageController } from '../classes/messageController';
 import { UsersCollector } from '../classes/usersColtroller';
 import { v4 as uuidv4 } from 'uuid';
@@ -46,13 +46,6 @@ dbActivate().then(() => {
             }),
         );
 
-        messagesDB?.saveMessage({
-            roomId: '1',
-            senderId: '0',
-            content: `User connected: ${ip}`,
-            type: 'SYSTEM',
-        });
-
         ws.on('message', async (raw) => {
             try {
                 let jsonString;
@@ -76,20 +69,43 @@ dbActivate().then(() => {
                         ws.send(JSON.stringify({ type: 'PONG', ts: Date.now() }));
                         break;
 
-                    case 'NEW_MESSAGE':
-                        for (const client of wss.clients) {
-                            if (client.readyState === ws.OPEN) {
-                                client.send(JSON.stringify({ from: ip, content: msg.content }));
-                            }
-                        }
-
-                        messagesDB?.saveMessage({
+                    case 'NEW_MESSAGE': {
+                        const newMessage: Message = {
+                            id: uuidv4(),
                             roomId: msg.roomId,
                             senderId: msg.senderId,
                             content: msg.content,
+                            sentAt: new Date().toLocaleString('en-US'),
+                            userName: msg.userName,
                             type: 'USER',
+                        };
+
+                        sendToAllClients({
+                            type: 'NEW_MESSAGE',
+                            message: newMessage,
                         });
+                        messagesDB?.saveMessage(newMessage);
                         break;
+                    }
+
+                    case 'JOIN_ROOM': {
+                        const newMessage: Message = {
+                            id: uuidv4(),
+                            roomId: msg.roomId,
+                            senderId: 'system',
+                            content: `${msg.userName} has joined the room! 🎉`,
+                            sentAt: new Date().toLocaleString('en-US'),
+                            userName: 'System',
+                            type: 'SYSTEM',
+                        };
+
+                        sendToAllClients({
+                            type: 'NEW_MESSAGE',
+                            message: newMessage,
+                        });
+                        messagesDB?.saveMessage(newMessage);
+                        break;
+                    }
 
                     case 'LOGIN': {
                         if (!usersDB) {
@@ -157,13 +173,19 @@ dbActivate().then(() => {
                     case 'GET_ROOM_DATA': {
                         const { roomId } = msg;
                         const roomMessages = messagesDB?.data[roomId] || [];
+                        const room = roomsDB?.data.rooms.find((room) => room.id === roomId);
+
+                        const roomData: RoomData = {
+                            roomId,
+                            messages: roomMessages,
+                            name: room?.name || 'Unknown Room',
+                            description: room?.description || '',
+                        };
 
                         ws.send(
                             JSON.stringify({
-                                type: 'ROOM_MESSAGES',
-                                roomId,
-                                messages: roomMessages,
-                                users: usersDB?.data,
+                                type: 'ROOM_DATA',
+                                ...roomData,
                             }),
                         );
                         break;

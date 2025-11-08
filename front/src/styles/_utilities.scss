@@ -37,6 +37,18 @@
     margin-left: auto;
 }
 
+.mr-auto {
+    margin-right: auto;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
 .justify-between {
     justify-content: space-between;
 }
@@ -49,6 +61,23 @@
     .gap-#{$i} {
         gap: calc(var(--spacing) * #{$i});
     }
+    .mr-#{$i} {
+        margin-right: calc(var(--spacing) * #{$i});
+    }
+    .ml-#{$i} {
+        margin-left: calc(var(--spacing) * #{$i});
+    }
+    .mt-#{$i} {
+        margin-top: calc(var(--spacing) * #{$i});
+    }
+    .mb-#{$i} {
+        margin-bottom: calc(var(--spacing) * #{$i});
+    }
+    .m-#{$i} {
+        margin: calc(var(--spacing) * #{$i});
+    }
+    .p-#{$i} {
+        padding: calc(var(--spacing) * #{$i});
+    }
 }
-
 

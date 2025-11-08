@@ -20,9 +20,6 @@
 }
 
 .msg {
-    display: grid;
-    grid-template-columns: 70px 1fr auto;
-    gap: 8px;
     background: var(--glass);
     border-radius: 8px;
     padding: 8px;
@@ -32,13 +29,13 @@
     font-style: italic;
 }
 .msg .user {
-    color: #4f8cff;
-}
-.msg .ts {
-    color: var(--muted);
+    font-weight: 300;
     font-size: 12px;
+    align-items: end;
+}
+.msg .time {
+    color: var(--muted);
+    font-size: 10px;
 }
 
 /* Utility: keep only last N messages visible in UI can be done via JS slicing; styles remain the same */
-
-
