@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
-import type { Configuration } from 'webpack';
+import type {Configuration} from 'webpack';
 
 const __dirname = process.cwd();
 
