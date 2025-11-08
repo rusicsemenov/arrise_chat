@@ -93,7 +93,7 @@ dbActivate().then(() => {
                             id: uuidv4(),
                             roomId: msg.roomId,
                             senderId: 'system',
-                            content: `${msg.userName} has joined the room! 🎉`,
+                            content: `${msg.userName} has joined the room!`,
                             sentAt: new Date().toLocaleString('en-US'),
                             userName: 'System',
                             type: 'SYSTEM',

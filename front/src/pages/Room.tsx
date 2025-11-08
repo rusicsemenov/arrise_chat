@@ -1,16 +1,17 @@
 import { Link, useParams } from 'react-router';
 import { useSocketContext } from '../componts/SocketProvider.tsx';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import { Message, RoomData } from '../../../types';
 import JSConfetti from 'js-confetti';
 import { useAuthContext } from '../componts/AuthProvider.tsx';
+import { toast } from 'react-toastify';
 
 const jsConfetti = new JSConfetti();
 
 const hashStringToHue = (str: string) => {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        hash = (str.codePointAt(i) || 1) + ((hash << 5) - hash);
     }
     return Math.abs(hash % 360);
 };
@@ -68,7 +69,14 @@ const Room = () => {
         const message = inputRef.current?.value.trim();
 
         console.log('Sending message:', message);
-        if (!message) return;
+        if (!message) {
+            return;
+        }
+
+        if (message.length > 200) {
+            toast('Message must be less than 200 characters', { type: 'error' });
+            return;
+        }
 
         wsClient?.send('MESSAGE', {
             type: 'NEW_MESSAGE',
@@ -90,7 +98,7 @@ const Room = () => {
         }
     };
 
-    const addConfettiSymbol = (e: React.MouseEvent) => {
+    const addConfettiSymbol = (e: MouseEvent) => {
         e.preventDefault();
         if (inputRef.current) {
             inputRef.current.value += ' 🎉';
@@ -104,6 +112,7 @@ const Room = () => {
     let previousMessageSenderId: string | null = null;
     let showUserInfo: boolean = false;
 
+    let currentDay: string | null = null;
     let time: string | null = null;
 
     let currentUserMessage = false;
@@ -122,8 +131,8 @@ const Room = () => {
             <div className="card messages flex flex1 w100">
                 <div className="scrollable flex-column gap-1 w100">
                     {messages.map(({ id, type, content, sentAt, userName, senderId }) => {
-                        const [currentDay, time] = sentAt.split(',');
-                        const showDateSeparator = previousMessageDay !== currentDay;
+                        [currentDay, time] = sentAt.split(',');
+                        showDateSeparator = previousMessageDay !== currentDay;
                         previousMessageDay = currentDay;
 
                         showUserInfo = previousMessageSenderId !== senderId;
