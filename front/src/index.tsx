@@ -3,6 +3,8 @@ import './styles/main.scss';
 import { SocketProvider } from './componts/SocketProvider.tsx';
 import { router } from './routes.tsx';
 import { RouterProvider } from 'react-router';
+import { Provider } from 'react-redux';
+import { store } from './store/store.ts';
 
 const appDiv = document.getElementById('app');
 
@@ -14,6 +16,8 @@ const root = createRoot(appDiv);
 
 root.render(
     <SocketProvider>
-        <RouterProvider router={router} />
+        <Provider store={store}>
+            <RouterProvider router={router} />
+        </Provider>
     </SocketProvider>,
 );

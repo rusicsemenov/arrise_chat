@@ -15,7 +15,7 @@ app.use(cors());
 
 const server = http.createServer(app);
 
-const wss = new WebSocketServer({ server }); // WS "вешается" на тот же сервер
+const wss = new WebSocketServer({ server });
 
 let messagesDB: MessageController | null = null;
 let usersDB: UsersCollector | null = null;
@@ -50,7 +50,7 @@ dbActivate().then(() => {
             try {
                 let jsonString;
                 if (Buffer.isBuffer(raw)) {
-                    jsonString = raw.toString('utf8'); // безопасно для Buffer
+                    jsonString = raw.toString('utf8');
                 } else if (typeof raw === 'string') {
                     jsonString = raw;
                 } else {

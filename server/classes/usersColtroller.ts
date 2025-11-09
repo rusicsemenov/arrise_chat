@@ -14,7 +14,7 @@ export class UsersCollector {
     }
 
     get data() {
-        return this.usersDB?.data || [];
+        return this.usersDB?.data.users || [];
     }
 
     init() {
@@ -47,7 +47,7 @@ export class UsersCollector {
             id: uuidv4(),
             name,
             passwordHash: hash,
-            registeredAt: new Date().toISOString(),
+            registeredAt: new Date().toLocaleString(),
         };
 
         this.usersDB.data.users.push(user);

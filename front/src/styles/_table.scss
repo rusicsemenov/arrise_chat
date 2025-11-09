@@ -1,0 +1,20 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+
+    th, td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+
+    th {
+        background-color: var(--accent);
+        font-weight: 600;
+    }
+
+    tbody tr:nth-child(even) {
+        background-color: var(--accent-weak);
+    }
+}
