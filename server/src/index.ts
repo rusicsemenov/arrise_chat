@@ -115,7 +115,7 @@ dbActivate().then(() => {
 
                         let sanitizedUser: SanitizedUser | null = null;
                         const { name, password } = msg;
-                        console.log(`User login attempt: ${name} / ${password}`);
+                        console.log(`User login attempt: ${name}`);
 
                         const user = usersDB.findUserByName(name);
                         const verifiedUser = user && (await usersDB.isVerifiedUser(user, password));
