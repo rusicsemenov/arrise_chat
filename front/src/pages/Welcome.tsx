@@ -43,9 +43,6 @@ const Welcome = () => {
         }
 
         if (validName && validPassword) {
-            console.log('Password:', password);
-            console.log('Name:', name);
-
             wsClient?.send('MESSAGE', { type: 'LOGIN', name: validName, password: validPassword });
         }
     };

@@ -29,8 +29,6 @@ const Users = () => {
         };
     }, [wsClient]);
 
-    console.log(usersState);
-
     return (
         <div className="card">
             <h1 className="mb-2">Users lest in the DB</h1>

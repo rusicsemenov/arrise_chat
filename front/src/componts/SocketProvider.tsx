@@ -1,7 +1,8 @@
 import { createContext, ReactElement, useContext, useEffect, useMemo, useState } from 'react';
 import { TDefaultComponentProps } from '../types/default.types.ts';
 import { MessageHandler, Type } from '../../../types';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { sagaMiddleware } from '../store/store.ts';
 
 class WSClient {
     private readonly url: string;
@@ -89,6 +90,10 @@ class WSClient {
         setTimeout(() => this.connect(), timeout);
     }
 
+    isConnected() {
+        return this.ws?.readyState === WebSocket.OPEN;
+    }
+
     private dispatch(type: string, data: any) {
         if (!this.listeners[type]) {
             return;
@@ -116,23 +121,31 @@ export const useSocketContext = () => {
 };
 
 export const SocketProvider = ({ children }: TDefaultComponentProps): ReactElement => {
-    const [wsClient, setWsClient] = useState<WSClient | null>(null);
+    const wsClient = useMemo<TWSClient>(() => new WSClient('ws://localhost:3001'), []);
+    const [isActive, setIsActive] = useState(wsClient.isConnected());
 
     useEffect(() => {
-        const client = new WSClient('ws://localhost:3001');
-        setWsClient(client);
-    }, []);
+        if (!wsClient) {
+            return;
+        }
 
-    useEffect(() => {
-        wsClient?.on('ERROR', (data: { message: string }) => {
-            toast(data.message, { type: 'error' });
-        });
+        sagaMiddleware.setContext({ wsClient });
     }, [wsClient]);
+
+    useEffect(() => {
+        if (!isActive) {
+            const interval = setInterval(() => {
+                setIsActive(wsClient?.isConnected());
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }
+    }, [isActive, wsClient]);
 
     const value = useMemo(() => ({ wsClient }), [wsClient]);
 
-    if (!wsClient) {
-        return <div>Connection...</div>;
+    if (!wsClient || !isActive) {
+        return <div className="h100 flex justify-center align-center">Waiting for connection...</div>;
     }
 
     return (
@@ -142,3 +155,5 @@ export const SocketProvider = ({ children }: TDefaultComponentProps): ReactEleme
         </SocketContext.Provider>
     );
 };
+
+export type TWSClient = InstanceType<typeof WSClient>;

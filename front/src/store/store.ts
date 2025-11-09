@@ -1,10 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
-import createSagaMiddleware from 'redux-saga';
-import rootSaga from './rootSaga';
+import createSagaMiddleware, { SagaMiddleware } from 'redux-saga';
+import { rootSaga } from './rootSaga';
 import usersReducer from './users/users.reducer.ts';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { TWSClient } from '../componts/SocketProvider.tsx';
 
-const sagaMiddleware = createSagaMiddleware();
+export type SagaContext = {
+    wsClient: TWSClient | null;
+};
+
+export const sagaMiddleware: SagaMiddleware<SagaContext> = createSagaMiddleware({
+    context: {
+        wsClient: null,
+    },
+});
 
 const reducer = { users: usersReducer };
 
