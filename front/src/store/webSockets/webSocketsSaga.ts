@@ -48,18 +48,8 @@ export function createSocketChannel(socket: TWSClient) {
     return eventChannel<SocketEvent>((emit) => {
         const handleRawMessage = (raw: string) => {
 
-            try {
-                const data = JSON.parse(raw);
-                const type = String(data.type).toLowerCase();
+            console.log('📨 Raw WS message received:', raw);
 
-                // make object without type field
-                const payload = { ...data };
-                delete payload.type;
-
-                emit({ type, payload } as SocketEvent);
-            } catch (err) {
-                console.error('Invalid WS data', err);
-            }
         };
 
         const handleErrorMessage = (error: { type: string, message: string }) => {

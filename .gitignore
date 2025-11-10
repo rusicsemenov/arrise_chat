@@ -2,4 +2,4 @@
 dist
 node_modules
 server/db/db_*.json
-letter.md
+*arrise-result*.*

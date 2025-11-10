@@ -1,6 +1,6 @@
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
-import { Message } from '@types';
+import type { Message } from '@types';
 import { WrightController } from './wrightController';
 import { v4 as uuidv4 } from 'uuid';
 

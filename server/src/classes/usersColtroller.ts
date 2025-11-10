@@ -1,5 +1,5 @@
 import { Low } from 'lowdb';
-import { User } from '@types';
+import type { User } from '@types';
 import bcrypt from 'bcrypt';
 import { WrightController } from './wrightController';
 import { JSONFile } from 'lowdb/node';
