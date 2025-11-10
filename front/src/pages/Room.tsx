@@ -130,6 +130,14 @@ const Room = () => {
             </div>
             <div className="card messages flex flex1 w100">
                 <div className="scrollable flex-column gap-1 w100">
+                    {
+                        messages.length === 0 ? (
+                            <div className="text-center w100 mt-2">
+                                No messages yet. Start the conversation!
+                            </div>
+                        ) : null
+                    }
+
                     {messages.map(({ id, type, content, sentAt, userName, senderId }) => {
                         [currentDay, time] = sentAt.split(',');
                         showDateSeparator = previousMessageDay !== currentDay;
