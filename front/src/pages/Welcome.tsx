@@ -15,35 +15,25 @@ const Welcome = () => {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        // Handle form submission logic here
 
-        const form = e.target as HTMLFormElement;
-        const formData = new FormData(form);
-        const name = formData.get('name');
-        const password = formData.get('password');
+        const formData = new FormData(e.target as HTMLFormElement);
+        const name = sanitizedName(formData.get('name'));
+        const password = sanitizedPassword(formData.get('password'));
 
-        const validName = sanitizedName(name);
-        const validPassword = sanitizedPassword(password);
-
-        if (validName) {
-            if (validName.length > 20) {
-                setError((prev) => ({ ...prev, name: 'Name must be less than 20 characters' }));
-                return;
-            }
-
-            setError((prev) => ({ ...prev, name: '' }));
-        } else {
-            setError((prev) => ({ ...prev, name: 'Name is required' }));
+        let nameError = '';
+        if (!name) {
+            nameError = 'Name is required';
+        } else if (name.length > 20) {
+            nameError = 'Name must be less than 20 characters';
         }
 
-        if (validPassword) {
-            setError((prev) => ({ ...prev, password: '' }));
-        } else {
-            setError((prev) => ({ ...prev, password: 'Password is required' }));
-        }
+        setError({
+            name: nameError,
+            password: password ? '' : 'Password is required',
+        });
 
-        if (validName && validPassword) {
-            wsClient?.send('MESSAGE', { type: 'LOGIN', name: validName, password: validPassword });
+        if (name && password && name.length <= 20) {
+            wsClient?.send('MESSAGE', { type: 'LOGIN', name, password });
         }
     };
 
@@ -88,28 +78,10 @@ const Welcome = () => {
 
 export default Welcome;
 
-// A simple name validation function (at least 3 characters)
-
 function sanitizedName(name: unknown): string | null {
-    if (name && typeof name === 'string' && name.trim() !== '' && name.trim().length >= 3) {
-        return name.trim();
-    }
-
-    return null;
+    return typeof name === 'string' && name.trim().length >= 3 ? name.trim() : null;
 }
 
-// A simple password validation function (at least 6 characters)
-// we can use regex for a more complex validation if needed
-
 function sanitizedPassword(password: unknown): string | null {
-    if (
-        password &&
-        typeof password === 'string' &&
-        password.trim() !== '' &&
-        password.trim().length >= 6
-    ) {
-        return password.trim();
-    }
-
-    return null;
+    return typeof password === 'string' && password.trim().length >= 6 ? password.trim() : null;
 }
