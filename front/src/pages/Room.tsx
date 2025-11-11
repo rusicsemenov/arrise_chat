@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { useAuthContext } from '../componts/AuthProvider.tsx';
 import { RoomMessage } from '../componts/RoomMessage.tsx';
 import { RoomForm } from '../componts/RoomForm.tsx';
-import { useRoomState } from '../hooks/useRoomState.tsx';
+import { useRoomState } from '../hooks/useRoomState';
 
 const Room = () => {
     const { userData } = useAuthContext();
