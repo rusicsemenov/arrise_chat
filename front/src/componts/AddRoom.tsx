@@ -15,23 +15,19 @@ const AddRoom = () => {
     const onFormSubmit = (e: FormEvent) => {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
-        const name = (form.elements.namedItem('room-name') as HTMLInputElement).value.trim();
-        const description = (
-            form.elements.namedItem('room-description') as HTMLTextAreaElement
-        ).value.trim();
+        const name = (form['room-name'] as HTMLInputElement).value.trim();
+        const description = (form['room-description'] as HTMLTextAreaElement).value.trim();
 
         if (!name) {
-            toast("Room name can''t be empty", { type: 'error' });
+            return toast("Room name can''t be empty", { type: 'error' });
         }
 
         if (name.length > 20) {
-            toast('Room name must be less than 20 characters', { type: 'error' });
-            return;
+            return toast('Room name must be less than 20 characters', { type: 'error' });
         }
 
         if (description.length > 200) {
-            toast('Room description must be less than 200 characters', { type: 'error' });
-            return;
+            return toast('Room description must be less than 200 characters', { type: 'error' });
         }
 
         wsClient?.send('MESSAGE', {
@@ -46,8 +42,8 @@ const AddRoom = () => {
             <button className="btn ml-auto" onClick={() => setIsOpen(true)}>
                 Create New Room
             </button>
-            {isOpen && typeof document !== 'undefined'
-                ? createPortal(
+            {Boolean(isOpen && typeof document !== 'undefined')
+                && createPortal(
                       <div className="modal">
                           <div className="modal-content">
                               <h2>Create New Room</h2>
@@ -74,8 +70,7 @@ const AddRoom = () => {
                           </div>
                       </div>,
                       document.body,
-                  )
-                : null}
+                  )}
         </>
     );
 };
