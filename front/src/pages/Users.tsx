@@ -1,4 +1,4 @@
-import { useSocketContext } from '../componts/SocketProvider.tsx';
+import { useSocketContext } from '../components/SocketProvider.tsx';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/store.ts';
 import { getUsersState } from '../store/users/user.selectors.ts';

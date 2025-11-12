@@ -1,8 +1,8 @@
 import { Link } from 'react-router';
 import { useRef } from 'react';
-import { useAuthContext } from '../componts/AuthProvider.tsx';
-import { RoomMessage } from '../componts/RoomMessage.tsx';
-import { RoomForm } from '../componts/RoomForm.tsx';
+import { useAuthContext } from '../components/AuthProvider.tsx';
+import { RoomMessage } from '../components/RoomMessage.tsx';
+import { RoomForm } from '../components/RoomForm.tsx';
 import { useRoomState } from '../hooks/useRoomState';
 
 const Room = () => {

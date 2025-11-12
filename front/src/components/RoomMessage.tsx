@@ -1,6 +1,6 @@
 import { UserAvatar } from './UserAvatar.tsx';
 import { Message } from '../../../types';
-import { hashStringToHue } from '../utuls/hashStringToHue.ts';
+import { hashStringToHue } from '../utils/hashStringToHue.ts';
 
 type RoomMessageType = {
     message: Message;

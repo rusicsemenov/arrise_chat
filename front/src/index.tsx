@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import './styles/main.scss';
-import { SocketProvider } from './componts/SocketProvider.tsx';
+import { SocketProvider } from './components/SocketProvider.tsx';
 import { router } from './routes.tsx';
 import { RouterProvider } from 'react-router';
 import { Provider } from 'react-redux';

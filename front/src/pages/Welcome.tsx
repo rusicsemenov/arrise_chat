@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useSocketContext } from '../componts/SocketProvider.tsx';
-import { useAuthContext } from '../componts/AuthProvider.tsx';
+import { useSocketContext } from '../components/SocketProvider.tsx';
+import { useAuthContext } from '../components/AuthProvider.tsx';
 
 // Will be better to use react-hook-form, but will do it without it for simplicity
 

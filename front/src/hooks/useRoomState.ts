@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Message, RoomData } from '../../../types';
 import { useParams } from 'react-router';
-import { useSocketContext } from '../componts/SocketProvider.tsx';
-import { useAuthContext } from '../componts/AuthProvider.tsx';
+import { useSocketContext } from '../components/SocketProvider.tsx';
+import { useAuthContext } from '../components/AuthProvider.tsx';
 import JSConfetti from 'js-confetti';
 
 const jsConfetti = new JSConfetti();

@@ -3,7 +3,7 @@ import createSagaMiddleware, { SagaMiddleware } from 'redux-saga';
 import { rootSaga } from './rootSaga';
 import usersReducer from './users/users.reducer.ts';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import { TWSClient } from '../componts/SocketProvider.tsx';
+import { TWSClient } from '../components/SocketProvider.tsx';
 
 export type SagaContext = {
     wsClient: TWSClient | null;

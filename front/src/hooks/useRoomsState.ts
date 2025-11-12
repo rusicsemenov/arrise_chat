@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Room } from '../../../types';
-import { useSocketContext } from '../componts/SocketProvider.tsx';
+import { useSocketContext } from '../components/SocketProvider.tsx';
 
 export const useRoomsState = () => {
     const [rooms, setRooms] = useState<Room[]>([]);

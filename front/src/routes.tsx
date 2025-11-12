@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router';
-import { App } from './componts/App.tsx';
+import { App } from './components/App.tsx';
 import { lazy } from 'react';
 
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));

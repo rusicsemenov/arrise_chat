@@ -1,4 +1,4 @@
-import { TWSClient } from '../../componts/SocketProvider.tsx';
+import { TWSClient } from '../../components/SocketProvider.tsx';
 import { call, delay, getContext, take } from 'redux-saga/effects';
 import { END, EventChannel, eventChannel } from 'redux-saga';
 import { SocketEvent } from '../../../../types';
@@ -47,24 +47,21 @@ export function* waitForSocketReady(): Generator<any, TWSClient> {
 export function createSocketChannel(socket: TWSClient) {
     return eventChannel<SocketEvent>((emit) => {
         const handleRawMessage = (raw: string) => {
-
             console.log('📨 Raw WS message received:', raw);
-
         };
 
-        const handleErrorMessage = (error: { type: string, message: string }) => {
+        const handleErrorMessage = (error: { type: string; message: string }) => {
             emit({ type: 'error', payload: { message: error.message } } as SocketEvent);
         };
 
         const handleHelloMessage = () => {
             emit({ type: 'connected' });
-        }
+        };
 
         const handleCloseMessage = () => {
             emit({ type: 'disconnected' });
             emit(END);
-        }
-
+        };
 
         /**
          * we should handle different message types here

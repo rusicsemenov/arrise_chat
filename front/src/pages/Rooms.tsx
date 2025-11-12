@@ -1,7 +1,7 @@
-import AddRoom from '../componts/AddRoom.tsx';
-import { useAuthContext } from '../componts/AuthProvider.tsx';
+import AddRoom from '../components/AddRoom.tsx';
+import { useAuthContext } from '../components/AuthProvider.tsx';
 import { useRoomsState } from '../hooks/useRoomsState';
-import { RoomCard } from '../componts/RoomCard.tsx';
+import { RoomCard } from '../components/RoomCard.tsx';
 
 const Rooms = () => {
     const { userData } = useAuthContext();
